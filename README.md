@@ -4,6 +4,7 @@ A python client for Authentise's open services.
 ##Usage:
 ###User Creation:
 ```python
+>>> from authentise_services.session import Session
 >>> Session.create_user(username='my_user',
                         password='my_pass',
                         name='joe rod',
