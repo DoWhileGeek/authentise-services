@@ -1,5 +1,5 @@
 # authentise-services
-a python client for Authentise's model and slicing services
+A python client for Authentise's open services.
 
 ##Usage:
 ###User Creation:
