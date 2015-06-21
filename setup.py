@@ -13,4 +13,9 @@ setup(
     install_requires=[
         "requests==2.7.0",
     ],
+    extras_require={
+        'develop': [
+            'pylint==1.4.3',
+            'pytest==2.6.4',
+        ]},
 )
