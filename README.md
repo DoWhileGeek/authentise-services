@@ -1,6 +1,8 @@
 # authentise-services
 A python client for Authentise's open services.
 
+[![Build Status](https://travis-ci.org/DoWhileGeek/authentise-services.svg?branch=master)](https://travis-ci.org/DoWhileGeek/authentise-services)
+
 ##Usage:
 ###User Creation:
 ```python
