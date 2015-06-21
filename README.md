@@ -2,6 +2,14 @@
 a python client for Authentise's model and slicing services
 
 ##Usage:
+###User Creation:
+```python
+>>> Session.create_user(username='my_user',
+                        password='my_pass',
+                        name='joe rod',
+                        email='joe@domain.com')
+```
+
 
 ###Model resource creation, upload, and download:
 ####Upload models on object creation:
