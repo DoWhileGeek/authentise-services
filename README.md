@@ -16,7 +16,7 @@ A python client for Authentise's open services.
 ```python
 >>> from authentise_services.session import Session
 >>> from authentise_services.model import Model
->>> session = Session('my_username', 'my_password')
+>>> session = Session('my_user', 'my_pass')
 >>> model = Model(session, path='../stls/squirtle.stl')
 >>> model.name
 'squirtle.stl'
