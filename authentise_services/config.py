@@ -17,6 +17,9 @@ class Config(object):
         self.username = config.get("username", None)
         self.password = config.get("password", None)
 
+    def __dir__(self):
+        return {"host": self.host, "username": self.username, "password": self.password}
+
     @staticmethod
     def parse_config(path):
         """parse either the config file we found, or use some canned defaults"""

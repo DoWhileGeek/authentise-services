@@ -2,13 +2,14 @@
 import ntpath  # for windows support
 
 import requests
-from authentise_services.config import Config
+
 from authentise_services import errors
+from authentise_services.config import Config
 
 
 class Model(object):
     """Class representation of Model resources."""
-    def __init__(self, session, path=None, model_uri=None):
+    def __init__(self, session, path=None, url=None):
         self.config = Config()
         try:  # catches session objects and session strings, probably horrible
             self.session = session.session
@@ -16,20 +17,24 @@ class Model(object):
             self.session = session
 
         if path:
-            self.upload_model(path)
-        elif model_uri:
-            self._get_model_status()
+            self.upload(path)
+        elif url:
+            self.location = url
+            self._get_status()
         else:
             self.name = ""
-            self.model_uri = ""
+            self.location = ""
 
-    def upload_model(self,  # pylint: disable=too-many-arguments
-                     path,
-                     name=None,
-                     resize=False,
-                     rotation=False,
-                     callback_url=None,
-                     callback_method=None, ):
+    def __str__(self):
+        return self.location
+
+    def upload(self,  # pylint: disable=too-many-arguments
+               path,
+               name=None,
+               resize=False,
+               rotation=False,
+               callback_url=None,
+               callback_method=None, ):
         """Create a new model resource in the warehouse and uploads the path contents to it"""
         if name is None:
             head, tail = ntpath.split(path)
@@ -56,14 +61,14 @@ class Model(object):
             if not put_resp.ok:
                 raise errors.ResourceError("model upload failed")
 
-        self.model_uri = post_resp.headers["Location"]
+        self.location = post_resp.headers["Location"]
 
-    def download_model(self, destination):
+    def download(self, destination):
         """downloads a model resource to the destination"""
-        if not self.model_uri:
-            raise errors.ResourceError("model_uri not set")
+        if not self.location:
+            raise errors.ResourceError("resource location not set")
 
-        service_get_resp = requests.get(self.model_uri, cookies={"session": self.session})
+        service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
 
         if payload["status"] == "error":
@@ -75,11 +80,11 @@ class Model(object):
             with open(destination, "wb") as model_file:
                 model_file.write(download_get_resp.content)
 
-    def _get_model_status(self):
+    def _get_status(self):
         """utility method to get the status of a model resource, but also used to initialize model
-            objects by model_uri"""
-        get_resp = requests.get(self.model_uri, cookies={"session": self.session})
+            objects by location"""
+        get_resp = requests.get(self.location, cookies={"session": self.session})
         self.name = get_resp.json()["name"]
         return get_resp.json()["status"]
 
-    status = property(_get_model_status)
+    status = property(_get_status)

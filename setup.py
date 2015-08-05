@@ -17,5 +17,6 @@ setup(
         'develop': [
             'pylint==1.4.3',
             'pytest==2.6.4',
+            'httpretty==0.8.10',
         ]},
 )

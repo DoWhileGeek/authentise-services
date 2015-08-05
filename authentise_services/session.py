@@ -11,6 +11,9 @@ class Session(object):  # pylint: disable=too-few-public-methods
     def __init__(self, username=None, password=None):
         self.session = self.__create_session(username, password)
 
+    def __str__(self):
+        return self.session
+
     @staticmethod
     def __create_session(username=None, password=None):
         """grabs the configuration, and makes the call to Authentise to create the session"""
