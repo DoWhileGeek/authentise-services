@@ -1,4 +1,4 @@
-"""Config class module"""
+"""Model class module"""
 import ntpath  # for windows support
 
 import requests
@@ -75,11 +75,11 @@ class Model(object):
             with open(destination, "wb") as model_file:
                 model_file.write(download_get_resp.content)
 
-    def get_model_status(self):
+    def _get_model_status(self):
         """utility method to get the status of a model resource, but also used to initialize model
             objects by model_uri"""
         get_resp = requests.get(self.model_uri, cookies={"session": self.session})
         self.name = get_resp.json()["name"]
         return get_resp.json()["status"]
 
-    status = property(get_model_status)
+    status = property(_get_model_status)
