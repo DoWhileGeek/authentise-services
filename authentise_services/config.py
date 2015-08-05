@@ -6,14 +6,15 @@ import os
 class Config(object):
     """This class is for the modules that need authentise session and host info"""
 
-    def __init__(self):
-        self.path = self.find_config_file(["/srv/authentise_services/config.ini",
-                                           os.path.expanduser("~/.authentise_services/config.ini"),
-                                          ])
+    def __init__(self, path=None):
+        self.path = path or self.find_config_file(["/srv/authentise_services/config.ini",
+                                                   os.path.expanduser(
+                                                       "~/.authentise_services/config.ini"),
+        ])
 
         config = self.parse_config(self.path)
 
-        self.host = config.get("host", None)
+        self.host = config.get("host", "authentise.com")
         self.username = config.get("username", None)
         self.password = config.get("password", None)
 
@@ -28,9 +29,10 @@ class Config(object):
         if path:  # if user has config with user creds in it, this will grab it
             config.read(path)
 
-        config["default"] = {"host": "authentise.com", }
-
-        return {k: v for k, v in config["default"].items()}
+        try:
+            return {k: v for k, v in config["default"].items()}
+        except KeyError:
+            return {}
 
     @staticmethod
     def find_config_file(possible_paths):

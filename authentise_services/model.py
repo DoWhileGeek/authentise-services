@@ -9,7 +9,9 @@ from authentise_services.config import Config
 
 class Model(object):
     """Class representation of Model resources."""
-    def __init__(self, session, path=None, url=None):
+
+    def __init__(self, session, path=None, url=None, name=None, callback_url=None,
+                 callback_method=None):
         self.config = Config()
         try:  # catches session objects and session strings, probably horrible
             self.session = session.session
@@ -17,7 +19,7 @@ class Model(object):
             self.session = session
 
         if path:
-            self.upload(path)
+            self.upload(path, name=name, callback_url=callback_url, callback_method=callback_method)
         elif url:
             self.location = url
             self._get_status()
@@ -65,9 +67,6 @@ class Model(object):
 
     def download(self, destination):
         """downloads a model resource to the destination"""
-        if not self.location:
-            raise errors.ResourceError("resource location not set")
-
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
 

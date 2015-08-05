@@ -55,9 +55,6 @@ class SlicingSettings(object):
     def download(self, destination):
         """downloads a config resource to the destination"""
 
-        if not self.location:
-            raise errors.ResourceError("no resource location")
-
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
 
@@ -66,9 +63,6 @@ class SlicingSettings(object):
             config_file.write(download_get_resp.content)
 
     def _get_description(self):
-        if not self.location:
-            raise errors.ResourceError("no resource location")
-
         resp = requests.get(self.location, cookies={"session": self.session})
 
         self.description = resp.json()["description"]

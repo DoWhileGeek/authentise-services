@@ -21,6 +21,7 @@ def test_create_slicing_settings_resource(httpretty, config, session, engine):
     settings = SlicingSettings(session, "tests/objects/slic3r.ini", engine)
     settings.location == headers["Location"]
 
+
 def test_load_pre_existing_config_resource(httpretty, config, session):
     uri = "http://quickslice.{}/config/abc-123/".format(config.host)
 
@@ -36,6 +37,7 @@ def test_load_pre_existing_config_resource(httpretty, config, session):
 
     assert settings.description == payload["description"]
     assert settings.location == uri
+
 
 def test_download_slicing_settings_resource(httpretty, config, session):
     headers = {"Location": "http://quickslice.{}/config/abc-123/".format(config.host), }
@@ -67,3 +69,15 @@ def test_download_slicing_settings_resource(httpretty, config, session):
 
         with open(path) as downloaded_file:
             assert content == downloaded_file.read()
+
+
+def test_unpopulated_slicing_settings(session):
+    model = SlicingSettings(session)
+    assert model.description == ""
+    assert model.location == ""
+
+
+def test_plain_string_session(session):
+    model = SlicingSettings(str(session))
+    assert model.description == ""
+    assert model.location == ""
