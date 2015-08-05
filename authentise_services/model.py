@@ -18,7 +18,7 @@ class Model(object):
         if path:
             self.upload_model(path)
         elif model_uri:
-            self.get_model_status()
+            self._get_model_status()
         else:
             self.name = ""
             self.model_uri = ""
