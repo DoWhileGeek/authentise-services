@@ -13,7 +13,7 @@ class Model(object):
     def __init__(self, session, path=None, url=None, name=None, callback_url=None,
                  callback_method=None):
         self.config = Config()
-        self.state = None
+        self._state = None
         try:  # catches session objects and session strings, probably horrible
             self.session = session.session
         except AttributeError:
@@ -67,19 +67,19 @@ class Model(object):
                 raise errors.ResourceError("model upload failed")
 
         self.location = post_resp.headers["Location"]
-        self.state = self._get_status()
+        self._state = self._get_status()
 
 
     def download(self, destination):
         """downloads a model resource to the destination"""
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
-        self.state = service_get_resp.json()["status"]
+        self._state = service_get_resp.json()["status"]
 
-        if self.state == "error":
+        if self._state == "error":
             raise errors.ResourceError("model resource is unusable")
-        elif self.state in ["not-uploaded", "processing"]:
-            raise errors.ResourceError("model resource is {}".format(self.state))
+        elif self._state in ["not-uploaded", "processing"]:
+            raise errors.ResourceError("model resource is {}".format(self._state))
         else:
             download_get_resp = requests.get(payload["content"])
             with open(destination, "wb") as model_file:
@@ -89,12 +89,12 @@ class Model(object):
         """utility method to get the status of a model resource, but also used to initialize model
             objects by location"""
 
-        if self.state in ["processed", "error"]:
-            return self.state
+        if self._state in ["processed", "error"]:
+            return self._state
 
         get_resp = requests.get(self.location, cookies={"session": self.session})
         self.name = get_resp.json()["name"]
-        self.state = get_resp.json()["status"]
-        return self.state
+        self._state = get_resp.json()["status"]
+        return self._state
 
     status = property(_get_status)
