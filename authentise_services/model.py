@@ -69,17 +69,14 @@ class Model(object):
         self.location = post_resp.headers["Location"]
         self._state = self._get_status()
 
-
     def download(self, destination):
         """downloads a model resource to the destination"""
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
-        self._state = service_get_resp.json()["status"]
+        self._state = payload["status"]
 
-        if self._state == "error":
-            raise errors.ResourceError("model resource is unusable")
-        elif self._state in ["not-uploaded", "processing"]:
-            raise errors.ResourceError("model resource is {}".format(self._state))
+        if self._state != "processed":
+            raise errors.ResourceError("slice resource status is: {}".format(self._state))
         else:
             download_get_resp = requests.get(payload["content"])
             with open(destination, "wb") as model_file:
