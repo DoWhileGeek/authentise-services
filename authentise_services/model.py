@@ -37,7 +37,8 @@ class Model(object):
                resize=False,
                rotation=False,
                callback_url=None,
-               callback_method=None, ):
+               callback_method=None,
+               auto_align=False, ):
         """Create a new model resource in the warehouse and uploads the path contents to it"""
         if name is None:
             head, tail = ntpath.split(path)
@@ -47,7 +48,8 @@ class Model(object):
 
         payload = {"name": name,
                    "allowed_transformations": {"resize": resize,
-                                               "rotation": rotation, }, }
+                                               "rotation": rotation, },
+                   "auto-align": auto_align}
         if callback_url and callback_method:
             payload["callback"] = {"url": callback_url, "method": callback_method}
 
