@@ -13,6 +13,7 @@ class Model(object):
     def __init__(self, session, path=None, url=None, name=None, callback_url=None,
                  callback_method=None):
         self.config = Config()
+        self.state = None
         try:  # catches session objects and session strings, probably horrible
             self.session = session.session
         except AttributeError:
@@ -24,8 +25,8 @@ class Model(object):
             self.location = url
             self._get_status()
         else:
-            self.name = ""
-            self.location = ""
+            self.name = None
+            self.location = None
 
     def __str__(self):
         return self.location
@@ -64,16 +65,19 @@ class Model(object):
                 raise errors.ResourceError("model upload failed")
 
         self.location = post_resp.headers["Location"]
+        self.state = self._get_status()
+
 
     def download(self, destination):
         """downloads a model resource to the destination"""
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
+        self.state = service_get_resp.json()["status"]
 
-        if payload["status"] == "error":
+        if self.state == "error":
             raise errors.ResourceError("model resource is unusable")
-        elif payload["status"] in ["not-uploaded", "processing"]:
-            raise errors.ResourceError("model resource is {}".format(payload["status"]))
+        elif self.state in ["not-uploaded", "processing"]:
+            raise errors.ResourceError("model resource is {}".format(self.state))
         else:
             download_get_resp = requests.get(payload["content"])
             with open(destination, "wb") as model_file:
@@ -82,8 +86,13 @@ class Model(object):
     def _get_status(self):
         """utility method to get the status of a model resource, but also used to initialize model
             objects by location"""
+
+        if self.state in ["processed", "error"]:
+            return self.state
+
         get_resp = requests.get(self.location, cookies={"session": self.session})
         self.name = get_resp.json()["name"]
-        return get_resp.json()["status"]
+        self.state = get_resp.json()["status"]
+        return self.state
 
     status = property(_get_status)

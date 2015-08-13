@@ -11,6 +11,14 @@ def test_create_model_resource(httpretty, config, session):
     headers = {"Location": "https://models.{}/model/abc-123/".format(config.host),
                "X-Upload-Location": "https://abc-123.com/"}
 
+    payload = {"name": "cube.stl",
+               "status": "processed"}
+
+    httpretty.register_uri(httpretty.GET,
+                           headers["Location"],
+                           body=json.dumps(payload),
+                           status=200)
+
     httpretty.register_uri(httpretty.POST,
                            "http://models.{}/model/".format(config.host),
                            adding_headers=headers,
@@ -29,6 +37,14 @@ def test_create_model_resource(httpretty, config, session):
 def test_create_model_resource_with_callback(httpretty, config, session):
     headers = {"Location": "https://models.{}/model/abc-123/".format(config.host),
                "X-Upload-Location": "https://abc-123.com/"}
+
+    payload = {"name": "cube.stl",
+               "status": "processed"}
+
+    httpretty.register_uri(httpretty.GET,
+                           headers["Location"],
+                           body=json.dumps(payload),
+                           status=200)
 
     httpretty.register_uri(httpretty.POST,
                            "http://models.{}/model/".format(config.host),
@@ -67,6 +83,14 @@ def test_download_model_resource(httpretty, config, session):
     headers = {"Location": "https://models.{}/model/abc-123/".format(config.host),
                "X-Upload-Location": "https://abc-123.com/"}
 
+    payload = {"name": "cube.stl",
+               "status": "processed"}
+
+    httpretty.register_uri(httpretty.GET,
+                           headers["Location"],
+                           body=json.dumps(payload),
+                           status=200)
+    
     httpretty.register_uri(httpretty.POST,
                            "http://models.{}/model/".format(config.host),
                            adding_headers=headers,
@@ -107,14 +131,14 @@ def test_download_model_resource(httpretty, config, session):
 
 def test_unpopulated_model(session):
     model = Model(session)
-    assert model.name == ""
-    assert model.location == ""
+    assert model.name == None
+    assert model.location == None
 
 
 def test_plain_string_session(session):
     model = Model(str(session))
-    assert model.name == ""
-    assert model.location == ""
+    assert model.name == None
+    assert model.location == None
 
 
 def test_magic_str_method(httpretty, config, session):
