@@ -52,14 +52,14 @@ class SlicingSettings(object):
 
         self.location = post_resp.headers["Location"]
 
-    def download(self, destination):
-        """downloads a config resource to the destination"""
+    def download(self, path):
+        """downloads a config resource to the path"""
 
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
 
         download_get_resp = requests.get(payload["content"])
-        with open(destination, "wb") as config_file:
+        with open(path, "wb") as config_file:
             config_file.write(download_get_resp.content)
 
     def _get_description(self):

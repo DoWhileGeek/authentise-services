@@ -69,8 +69,8 @@ class Model(object):
         self.location = post_resp.headers["Location"]
         self._state = self._get_status()
 
-    def download(self, destination):
-        """downloads a model resource to the destination"""
+    def download(self, path):
+        """downloads a model resource to the path"""
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
         self._state = payload["status"]
@@ -79,7 +79,7 @@ class Model(object):
             raise errors.ResourceError("slice resource status is: {}".format(self._state))
         else:
             download_get_resp = requests.get(payload["content"])
-            with open(destination, "wb") as model_file:
+            with open(path, "wb") as model_file:
                 model_file.write(download_get_resp.content)
 
     def _get_status(self):
