@@ -23,7 +23,10 @@ def _create_version_from_description(git_description):
 def get_version():
     description = _get_git_description()
 
-    return _create_version_from_description(description)
+    if description:
+        return _create_version_from_description(description)
+    else:
+        return None
 
 
 def main():
