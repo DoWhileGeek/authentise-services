@@ -6,7 +6,7 @@ setup(
     description="A client library for Authentise open services",
     author="Joeseph Rodrigues",
     author_email="dowhilegeek@gmail.com",
-    version="0.1.0",
+    version="0.3.0",
     packages=["authentise_services"],
     package_data={"authentise_services": ["authentise_services/*"], },
     include_package_data=True,
