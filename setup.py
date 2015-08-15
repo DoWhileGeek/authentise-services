@@ -18,5 +18,6 @@ setup(
             'pylint==1.4.3',
             'pytest==2.6.4',
             'httpretty==0.8.10',
+            'twine==1.5.0',
         ]},
 )
