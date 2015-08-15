@@ -1,7 +1,12 @@
 import re
 import subprocess
+import contextlib
+import os
+import json
 
 from setuptools import setup
+
+VERSION_FILE = os.path.join(os.path.dirname(__file__), "authentise_services/version.json")
 
 
 def _get_git_description():
@@ -21,12 +26,19 @@ def _create_version_from_description(git_description):
 
 
 def get_version():
-    description = _get_git_description()
+    with open(VERSION_FILE) as version_file:
+        return json.loads(version_file.read())["version"]
 
-    if description:
-        return _create_version_from_description(description)
-    else:
-        return None
+
+@contextlib.contextmanager
+def write_version():
+    git_description = _get_git_description()
+
+    version = _create_version_from_description(git_description) if git_description else None
+
+    if version:
+        with open(VERSION_FILE, 'w') as version_file:
+            version_file.write(json.dumps({"version": version}))
 
 
 def main():
