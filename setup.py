@@ -1,9 +1,13 @@
 from setuptools import setup
 
+with open("README.md") as readme_file:
+    long_description = readme_file.read()
 
 setup(
     name="authentise_services",
+    url="https://github.com/DoWhileGeek/authentise-services",
     description="A client library for Authentise open services",
+    long_description=long_description,
     author="Joeseph Rodrigues",
     author_email="dowhilegeek@gmail.com",
     version="0.3.0",
