@@ -39,6 +39,7 @@ def write_version():
     if version:
         with open(VERSION_FILE, 'w') as version_file:
             version_file.write(json.dumps({"version": version}))
+    yield
 
 
 def main():
