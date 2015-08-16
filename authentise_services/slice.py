@@ -18,6 +18,7 @@ class Slice(object):
             raise errors.ResourceError
 
         self._state = None
+        self.slice_time = None
         self.config = Config()
         try:  # catches session objects and session strings, probably horrible
             self.session = session.session
@@ -34,6 +35,7 @@ class Slice(object):
         service_get_resp = requests.get(self.location, cookies={"session": self.session})
         payload = service_get_resp.json()
         self._state = payload["status"]
+        self.slice_time = payload["slice_time"]
 
         if self._state != "processed":
             raise errors.ResourceError("slice resource status is: {}".format(self._state))
@@ -57,7 +59,9 @@ class Slice(object):
             return self._state
         
         get_resp = requests.get(self.location, cookies={"session": self.session})
+
         self._state = get_resp.json()["status"]
+        self.slice_time = get_resp.json()["slice_time"]
         
         return self._state
 

@@ -46,7 +46,7 @@ class SlicingSettings(object):
 
         post_resp = requests.post(url, json=payload, cookies={"session": self.session})
         if not post_resp.ok:
-            raise errors.ResourceError("upload to slicing service failed")
+            raise errors.ResourceError("config upload to slicing service failed")
 
         self.description = description
 
