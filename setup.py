@@ -55,7 +55,7 @@ def main():
             package_data={"authentise_services": ["authentise_services/*"], },
             include_package_data=True,
             install_requires=[
-                "requests==2.7.0",
+                "requests==2.20.0",
             ],
             extras_require={
                 'develop': [
